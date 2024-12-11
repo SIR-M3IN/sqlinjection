@@ -5,101 +5,49 @@ import anvil.tables.query as q
 from anvil.tables import app_tables
 import anvil.server
 import sqlite3
-
 DATABASE_FILE = data_files["database.db"]
 
-
-# def login(username, password):
-#   try:
-#       connection = sqlite3.connect(DATABASE_FILE)
-#       cursor = connection.cursor()
-      
-#       query = "SELECT username, isAdmin FROM Users WHERE username = ? AND password = ?"
-#       cursor.execute(query, (username, password))
-      
-#       result = cursor.fetchone()
-      
-#       if result:
-#         username, is_admin = result
-#         print("Admin")
-#         return {"success": True, "username": username, "isAdmin": bool(is_admin)}
-#       else:
-#         print("No Admin")
-#         return {"success": False, "message": "Invalid username or password."}
-  
-#   except Exception as e:
-#     return {"success": False, "message": f"An error occurred: {str(e)}"}
-  
-#   finally:
-#     connection.close()
+def get_db_connection():
+    return sqlite3.connect(DATABASE_FILE)
 @anvil.server.callable
-def loginLvl1(username, password):
-    connection = sqlite3.connect(DATABASE_FILE)
-    cursor = connection.cursor()
-
-    query = f"SELECT username FROM Users WHERE username = '{username}' AND password = '{password}'"
-    print("SQL Query:", query)
-    cursor.execute(query)
-    result = cursor.fetchone()
-
-    connection.close()
-
-    if result != None:
-        [username] = result
-        return {"success": True, "username": username}
-    else:
-        return {"success": False, "message": "Invalid username or password."}
+def login(username, password):
+    db = sqlite3.connect(DATABASE_FILE)
+    cursor = db.cursor()
+    try:
+        query = f"SELECT AccountNo, isAdmin FROM Users WHERE username='{username}' AND password='{password}'"
+        result = cursor.execute(query).fetchone()
+        
+        if result:
+            return {
+                'success': True,
+                'AccountNo': result[0],
+                'isAdmin': bool(result[1])
+            }
+        else:
+            return {
+                'success': False,
+                'message': 'Benutzer oder Passwort falsch.'
+            }
+    except Exception as e:
+        return {
+            'success': False,
+            'message': str(e)
+        }
+    finally:
+        db.close()
 
 @anvil.server.callable
-def loginLvl2(username, password):
-    connection = sqlite3.connect(DATABASE_FILE)
-    cursor = connection.cursor()
-
-    query = f"SELECT username, isAdmin FROM Users WHERE username = '{username}' AND password = '{password}'"
-    print("SQL Query:", query)
-    cursor.execute(query)
-    result = cursor.fetchone()
-
-    connection.close()
-
-    if result != None:
-        [username, is_admin] = result
-        return {"success": True, "username": username, "isAdmin": bool(is_admin)}
-    else:
-        return {"success": False, "message": "Invalid username or password."}
-
-@anvil.server.callable
-def loginLvl3(username, password):
-    connection = sqlite3.connect(DATABASE_FILE)
-    cursor = connection.cursor()
-
-    query = f"SELECT username, isAdmin FROM Users WHERE username = '{username}' AND password = '{password}'"
-    print("SQL Query:", query)
-    cursor.execute(query)
-    result = cursor.fetchone()
-
-    connection.close()
-
-    if result != None:
-        [username, is_admin] = result
-        return {"success": True, "username": username, "isAdmin": bool(is_admin)}
-    else:
-        return {"success": False, "message": "Invalid username or password."}
-
-@anvil.server.callable
-def loginLvl4(username, password):
-    connection = sqlite3.connect(DATABASE_FILE)
-    cursor = connection.cursor()
-
-    query = f"SELECT username, isAdmin FROM Users WHERE username = '{username}' AND password = '{password}'"
-    print("SQL Query:", query)
-    cursor.execute(query)
-    result = cursor.fetchone()
-
-    connection.close()
-
-    if result != None:
-        [username, is_admin] = result
-        return {"success": True, "username": username, "isAdmin": bool(is_admin)}
-    else:
-        return {"success": False, "message": "Invalid username or password."}
+def get_balance(account_no):
+    db = sqlite3.connect('database.db')
+    cursor = db.cursor()
+    try:
+        query = f"SELECT balance FROM Balances WHERE AccountNo={account_no}"
+        result = cursor.execute(query).fetchone()
+        if result:
+            return {'success': True, 'balance': result[0]}
+        else:
+            return {'success': False, 'message': 'Kein Kontostand gefunden.'}
+    except Exception as e:
+        return {'success': False, 'message': str(e)}
+    finally:
+        db.close()
