@@ -16,9 +16,7 @@ class Form1(Form1Template):
         try:
             result = anvil.server.call('login', username, password)
             if result['success']:
-                account_no = result['AccountNo']
-                is_admin = result['isAdmin']
-                alert(f"Willkommen {username}! Kontonummer: {account_no}, Admin: {is_admin}")
+                alert(f"Willkommen {username}!")
             else:
                 alert(f"Login fehlgeschlagen: {result['message']}")
         except Exception as e:

@@ -14,7 +14,7 @@ def login(username, password):
     db = sqlite3.connect(DATABASE_FILE)
     cursor = db.cursor()
     try:
-        query = f"SELECT AccountNo, isAdmin FROM Users WHERE username='{username}' AND password='{password}'"
+        query = f"SELECT * FROM Users WHERE username='{username}' AND password='{password}'"
         result = cursor.execute(query).fetchone()
         
         if result:
