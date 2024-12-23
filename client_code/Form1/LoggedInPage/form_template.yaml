@@ -1,0 +1,27 @@
+components:
+- components:
+  - event_bindings: {click: logoutBtn_click}
+    layout_properties: {grid_position: 'ARLFYC,IYFLNX'}
+    name: button_Logg_out
+    properties: {text: Logg out}
+    type: Button
+  - layout_properties: {grid_position: 'VHTBZG,LBNTHT'}
+    name: balance_label
+    properties: {text: refresh after pressed}
+    type: Label
+  layout_properties: {slot: default}
+  name: content_panel
+  properties: {}
+  type: ColumnPanel
+- layout_properties: {slot: nav-right}
+  name: navbar_links
+  properties: {}
+  type: FlowPanel
+- layout_properties: {slot: title}
+  name: label_1
+  properties: {text: Loged in no Acc Number was passed}
+  type: Label
+container:
+  properties: {html: '@theme:standard-page.html'}
+  type: HtmlTemplate
+is_package: true
